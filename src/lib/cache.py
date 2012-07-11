@@ -1,8 +1,6 @@
 '''
 Created on Feb 24, 2012
 
-Caching wrapper built on top of Redis
-
 @author: Benjamin Dezile
 '''
 
@@ -12,7 +10,7 @@ import redis
 import uuid
 
 class Cache:
-    ''' Caching wrapper
+    ''' Caching wrapper built on top Redis
     
     Cacheable types:
      - Dictionaries
