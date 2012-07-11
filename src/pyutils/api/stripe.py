@@ -72,7 +72,7 @@ class StripeAPI:
         cus_id:    Customer id
         '''
         # Delete customer
-        cus = cls._get_customer(cus_id)
+        cus = cls.get_customer(cus_id)
         resp = cus.delete()
         if resp.deleted:
             Logger.info("Deleted customer %s" % cus.id)
@@ -80,7 +80,7 @@ class StripeAPI:
         return False
     
     @classmethod
-    def _get_customer(cls, cus_id):
+    def get_customer(cls, cus_id):
         ''' Get a customer '''
         if not cus_id:
             raise ValueError('No customer id provided')
