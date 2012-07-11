@@ -5,7 +5,6 @@ Created on Feb 23, 2012
 '''
 
 from subprocess import call
-from pyutils.utils.logging import Logger
 import uuid
 import os
 
@@ -53,7 +52,7 @@ class Mailer:
             resp = fp.read()
             fp.close()
             
-            Logger.info("Send email \"%s\" to %s: return = %s, response = %s" % (subject, to_address, ret_val, resp.replace("\n", "")))
+            print "Send email \"%s\" to %s: return = %s, response = %s" % (subject, to_address, ret_val, resp.replace("\n", ""))
         finally:
             if fp: 
                 fp.close()

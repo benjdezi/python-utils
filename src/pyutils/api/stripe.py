@@ -5,8 +5,6 @@ Created on Feb 28, 2012
 @author: Benjamin Dezile
 '''
 
-from pyutils.utils.logging import Logger
-from pyutils.utils.config import Config
 import stripe
 
 DEFAULT_CURRENCY = "usd"
@@ -39,19 +37,11 @@ class StripeCard:
 
 class StripeAPI:
     ''' Stripe API wrapper '''
-    
-    instance = None
-    
-    def __init__(self, config=None):
-        ''' Create a new API wrapper '''
-        if StripeAPI.instance: 
-            raise Exception("Singleton already initialized")
-        self.config = Config.get("stripe")
-        if config and type(config) is dict:
-            for k in config.keys():
-                self.config[k] = config[k] 
-        stripe.api_key = self.config['secret']
-        StripeAPI.instance = self
+            
+    @classmethod
+    def init(cls, api_key):
+        ''' Initialize the wrapper '''
+        stripe.api_key = api_key
         
     @classmethod
     def create_new_customer(cls, email, description=None):
@@ -63,7 +53,7 @@ class StripeAPI:
             description = email
         # Create new customer
         cus = stripe.Customer.create(email=email, description=description)
-        Logger.info("Created new Stripe customer [%s] for " % (cus.id, email))
+        print "Created new Stripe customer [%s] for " % (cus.id, email)
         return cus.id
     
     @classmethod
@@ -75,7 +65,7 @@ class StripeAPI:
         cus = cls.get_customer(cus_id)
         resp = cus.delete()
         if resp.deleted:
-            Logger.info("Deleted customer %s" % cus.id)
+            print "Deleted customer %s" % cus.id
             return True
         return False
     
@@ -104,7 +94,7 @@ class StripeAPI:
         cus.card = token.id
         cus.save()
 
-        Logger.info("Set card [%s] for user %s" % (token.id, cus_id))
+        print "Set card [%s] for user %s" % (token.id, cus_id)
         return token.id
     
     @classmethod
@@ -123,11 +113,7 @@ class StripeAPI:
         # Create new charge
         charge = stripe.Charge.create(**params)
         if charge.paid:
-            Logger.info("Charged [%s] customer %s for %f %s" % (charge.id, cus_id, amount_cents, charge.currency.upper()))
+            print "Charged [%s] customer %s for %f %s" % (charge.id, cus_id, amount_cents, charge.currency.upper())
             return charge.id
         else:
             raise Exception("Could not charge customer %s, response = %s" % (cus_id, charge))
-        
-
-if not StripeAPI.instance:
-    StripeAPI()
