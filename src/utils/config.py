@@ -4,6 +4,7 @@ Created on Feb 20, 2012
 @author: Benjamin Dezile
 '''
 
+from logging import Logger
 import yaml
 import os
 
@@ -31,7 +32,7 @@ class ConfigParser:
             root = self.config if not key else self.config[key]
             for k in m.keys():
                 root[k] = m[k]
-            print "Loaded configuration from %s" % filepath
+            Logger.info("Loaded configuration from %s" % filepath)
         finally:
             if fp: fp.close()
             
@@ -155,7 +156,7 @@ class Config:
         config_files:  Config files to be parsed (list or map of file -> namespace key)
         '''
         if not cls.config:
-            print "Loading application configuration"
+            Logger.info("Loading application configuration")
             root = config_dir if config_dir is not None else "."
             reader = ConfigParser()
             try:
@@ -175,11 +176,14 @@ class Config:
                     for file_name in config_files.keys():
                         reader.parse(os.path.join(root, file_name), config_files[file_name])
                         
+                # Get parsed config map
+                cls.config = reader.get()        
+                
                 # Get environment
                 app_config = cls.config.get('application')
                 if app_config and app_config.has_key('env'):
                     cls.env = app_config['env']
                         
-                print "Loaded configuration"
+                Logger.info("Loaded configuration")
             except Exception, e:
-                print "Error while reading config file: %s" % e
+                Logger.error("Error while reading config file", e)
