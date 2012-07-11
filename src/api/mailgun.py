@@ -14,10 +14,16 @@ API_KEY = Config.get("mailgun", "key")
 API_SEND_URL = Config.get("mailgun", "url") + "/koioos.mailgun.org/messages"
 
 class Mailer:
-    ''' Helpers for sending emails '''
+    ''' Mailgun wrapper '''
         
     @classmethod
     def send(cls, msg, subject, to_address, from_address):
+        ''' Send the given message via email to the specified adress 
+        msg:               Message content
+        subject:           Message subject (optional)
+        to_address:        Recipient's email address
+        from_address:      Sender's email address
+        '''
         
         if not msg or not to_address or not from_address:
             raise ValueError("Missing or invalid parameters")
