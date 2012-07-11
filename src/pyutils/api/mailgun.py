@@ -11,14 +11,22 @@ import os
 class Mailer:
     ''' Mailgun wrapper '''
     
+    verbose = True
     api_key = None
     send_url = None
     
     @classmethod
-    def init(cls, api_key, send_url):
+    def init(cls, api_key, send_url, verbose=True):
         ''' Initialize the mailer '''
+        cls.verbose = verbose
         cls.api_key = api_key
         cls.send_url = send_url
+    
+    @classmethod
+    def _verbose(cls, msg):
+        ''' Print out a message '''
+        if cls.verbose is True:
+            print msg
     
     @classmethod
     def send(cls, msg, subject, to_address, from_address):
@@ -52,7 +60,7 @@ class Mailer:
             resp = fp.read()
             fp.close()
             
-            print "Send email \"%s\" to %s: return = %s, response = %s" % (subject, to_address, ret_val, resp.replace("\n", ""))
+            cls._verbose("Send email \"%s\" to %s: return = %s, response = %s" % (subject, to_address, ret_val, resp.replace("\n", "")))
         finally:
             if fp: 
                 fp.close()

@@ -38,10 +38,19 @@ class StripeCard:
 class StripeAPI:
     ''' Stripe API wrapper '''
             
+    verbose = True
+        
     @classmethod
-    def init(cls, api_key):
+    def init(cls, api_key, verbose=True):
         ''' Initialize the wrapper '''
         stripe.api_key = api_key
+        cls.verbose = verbose
+        
+    @classmethod
+    def _verbose(cls, msg):
+        ''' Print out a message '''
+        if cls.verbose is True:
+            print msg
         
     @classmethod
     def create_new_customer(cls, email, description=None):
@@ -53,7 +62,7 @@ class StripeAPI:
             description = email
         # Create new customer
         cus = stripe.Customer.create(email=email, description=description)
-        print "Created new Stripe customer [%s] for " % (cus.id, email)
+        cls._verbose("Created new Stripe customer [%s] for " % (cus.id, email))
         return cus.id
     
     @classmethod
@@ -65,7 +74,7 @@ class StripeAPI:
         cus = cls.get_customer(cus_id)
         resp = cus.delete()
         if resp.deleted:
-            print "Deleted customer %s" % cus.id
+            cls._verbose("Deleted customer %s" % cus.id)
             return True
         return False
     
@@ -94,7 +103,7 @@ class StripeAPI:
         cus.card = token.id
         cus.save()
 
-        print "Set card [%s] for user %s" % (token.id, cus_id)
+        cls._verbose("Set card [%s] for user %s" % (token.id, cus_id))
         return token.id
     
     @classmethod
@@ -113,7 +122,7 @@ class StripeAPI:
         # Create new charge
         charge = stripe.Charge.create(**params)
         if charge.paid:
-            print "Charged [%s] customer %s for %f %s" % (charge.id, cus_id, amount_cents, charge.currency.upper())
+            cls._verbose("Charged [%s] customer %s for %f %s" % (charge.id, cus_id, amount_cents, charge.currency.upper()))
             return charge.id
         else:
             raise Exception("Could not charge customer %s, response = %s" % (cus_id, charge))
