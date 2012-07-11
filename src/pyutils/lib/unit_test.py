@@ -160,13 +160,13 @@ class TestSuite:
             raise AssertionError("%s is not different from %s" % (a, b))
     
     @classmethod    
-    def assert_is_true(cls, statement):
+    def assert_true(cls, statement):
         ''' Assert whether a statement is true '''
         if not statement:
             raise AssertionError()
         
     @classmethod
-    def assert_is_false(cls, statement):
+    def assert_false(cls, statement):
         ''' Assert whether a statement is false '''
         if statement:
             raise AssertionError()
