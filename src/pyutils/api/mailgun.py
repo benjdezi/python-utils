@@ -6,16 +6,21 @@ Created on Feb 23, 2012
 
 from subprocess import call
 from pyutils.utils.logging import Logger
-from pyutils.utils.config import Config
 import uuid
 import os
 
-API_KEY = Config.get("mailgun", "key")
-API_SEND_URL = Config.get("mailgun", "url") + "/koioos.mailgun.org/messages"
-
 class Mailer:
     ''' Mailgun wrapper '''
-        
+    
+    api_key = None
+    send_url = None
+    
+    @classmethod
+    def init(cls, api_key, send_url):
+        ''' Initialize the mailer '''
+        cls.api_key = api_key
+        cls.send_url = send_url
+    
     @classmethod
     def send(cls, msg, subject, to_address, from_address):
         ''' Send the given message via email to the specified adress 
@@ -30,8 +35,8 @@ class Mailer:
         
         tmp_filepath = os.path.join('tmp', "%s.mailgun.out" % uuid.uuid4())
         cli_params = ["curl", "-s", "-k", "--user",
-                      "api:%s" % API_KEY,
-                      API_SEND_URL,
+                      "api:%s" % cls.api_key,
+                      cls.send_url,
                       "-F", "from=%s" % from_address,
                       "-F", "to=%s" % to_address,
                       "-F", "subject=%s" % (subject.replace("'", "\'") if subject else ""),
