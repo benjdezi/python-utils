@@ -254,7 +254,7 @@ class Cache:
         return cls.instance.redis.flushdb()
     
     @classmethod
-    def removeFrom(cls, key, value):
+    def remove_from(cls, key, value):
         ''' Remove a value from a cache entry (if applicable).
         Only works with hash or set.
         key:        Key to remove from
