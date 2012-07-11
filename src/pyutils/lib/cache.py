@@ -1,10 +1,11 @@
 '''
 Created on Feb 24, 2012
 
+@requires: redis (pip install redis)
 @author: Benjamin Dezile
 '''
 
-from utils.config import Config
+from pyutils.utils.config import Config
 from cStringIO import StringIO
 import redis
 import uuid

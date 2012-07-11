@@ -1,10 +1,11 @@
 '''
 Created on Feb 21, 2012
 
+@requires:amqplib (pip install amqplib)
 @author: Benjamin Dezile
 '''
 
-from utils.logging import Logger
+from pyutils.utils.logging import Logger
 from amqplib import client_0_8 as amqp
 import json
 import re

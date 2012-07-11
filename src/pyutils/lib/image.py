@@ -1,8 +1,7 @@
 '''
 Created on Mar 13, 2012
 
-Image processing helpers
-
+@requires: PIL (pip install PIL)
 @author: Benjamin Dezile
 '''
 

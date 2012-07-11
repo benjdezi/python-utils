@@ -1,11 +1,12 @@
 '''
 Created on Feb 28, 2012
 
+@requires: stripe (pip install --index-url https://code.stripe.com --upgrade stripe)
 @author: Benjamin Dezile
 '''
 
-from utils.logging import Logger
-from utils.config import Config
+from pyutils.utils.logging import Logger
+from pyutils.utils.config import Config
 import stripe
 
 DEFAULT_CURRENCY = "usd"

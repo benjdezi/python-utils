@@ -1,6 +1,7 @@
 '''
 Created on Feb 20, 2012
 
+@requires:pyYAML (pip install pyyaml)
 @author: Benjamin Dezile
 '''
 

@@ -5,8 +5,8 @@ Created on Feb 23, 2012
 '''
 
 from subprocess import call
-from utils.logging import Logger
-from utils.config import Config
+from pyutils.utils.logging import Logger
+from pyutils.utils.config import Config
 import uuid
 import os
 
