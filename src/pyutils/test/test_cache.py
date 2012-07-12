@@ -88,7 +88,7 @@ class TestCache(TestSuite):
         self.assert_not_none(u)
         self.assert_equal(len(u), N)
         for i in u:
-            self.assertIn(int(i), s)
+            self.assert_in(int(i), s)
         
         (res_key, n) = Cache.union(key1, key2, inplace=True)
         self.assert_equal(n, N)
@@ -137,7 +137,7 @@ class TestCache(TestSuite):
         Cache.put(key, TEST_SORTED_SET, sorted=True)
         self.assert_true(Cache.has(key))
         self.assert_equal(Cache.size(key), len(TEST_SORTED_SET))
-        self.assert_equal(self.f.type(key), Cache.REDIS_TYPE_SORTED_SET)
+        self.assert_equal(self.r.type(key), Cache.REDIS_TYPE_SORTED_SET)
         
         items = Cache.get(key, range=(0, -1))
         self.assert_not_none(items)

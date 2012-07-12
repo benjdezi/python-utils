@@ -121,9 +121,10 @@ class Config:
         ''' Return the name of the application '''
         try:
             name = cls.get("application", "name")
-            return name.capitalize()
+            if name and type(name) is str:
+                return name.capitalize()
         except ValueError:
-            return None
+            pass
 
     @classmethod
     def get_version(cls):
@@ -131,7 +132,7 @@ class Config:
         try:
             return cls.get("application", "version")
         except ValueError:
-            return None
+            pass
 
     @classmethod
     def get_domain(cls):
@@ -139,7 +140,7 @@ class Config:
         try:
             return cls.get("application", "domain")
         except ValueError:
-            return None
+            pass
         
     @classmethod
     def get_root_url(cls):

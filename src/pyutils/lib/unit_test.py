@@ -184,7 +184,7 @@ class TestSuite:
             raise AssertionError("%s is not lesser than %s" % (a, b))
 
     @classmethod
-    def assert_within(self, a, r):
+    def assert_within(cls, a, r):
         ''' Assert whether a number is in a given range '''
         if a not in range(*r):
             raise AssertionError("%s is not in %s" % (a, r))

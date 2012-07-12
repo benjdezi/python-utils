@@ -22,7 +22,7 @@ class StripeCard:
         '''
         self.name = name
         self.number = number
-        self.month= month
+        self.month = month
         self.year = year
         self.cvc = cvc
         
@@ -62,7 +62,7 @@ class StripeAPI:
             description = email
         # Create new customer
         cus = stripe.Customer.create(email=email, description=description)
-        cls._verbose("Created new Stripe customer [%s] for " % (cus.id, email))
+        cls._verbose("Created new Stripe customer [%s] for %s" % (cus.id, email))
         return cus.id
     
     @classmethod
@@ -99,7 +99,7 @@ class StripeAPI:
         token = stripe.Token.create(card=card.to_dict(), currency=DEFAULT_CURRENCY)
         
         # Update customer info
-        cus = cls._getCustomer(cus_id)
+        cus = cls.get_customer(cus_id)
         cus.card = token.id
         cus.save()
 

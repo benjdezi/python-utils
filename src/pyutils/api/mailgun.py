@@ -69,6 +69,6 @@ class Mailer:
                 fp.close()
             try: 
                 os.remove(tmp_filepath) 
-            except: 
+            except BaseException: 
                 pass
 

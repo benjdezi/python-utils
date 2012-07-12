@@ -7,10 +7,9 @@ Created on Feb 20, 2012
 from datetime import datetime
 import traceback
 
-
 class Logger:
 	''' General logger '''
-
+	
 	LOG_LEVEL_ERROR = 0
 	LOG_LEVEL_WARN = 1
 	LOG_LEVEL_INFO = 2
@@ -18,7 +17,7 @@ class Logger:
 	LOG_LEVEL_TRACE = 4
 	LOG_LEVEL_ALL = 5
 	LEVEL_NAMES = ["Error", "Warning", "Info", "Debug", "Trace"]
-
+	
 	options = { 'level': 5 }
 
 	@classmethod
