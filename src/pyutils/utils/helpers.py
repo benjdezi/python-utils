@@ -6,9 +6,7 @@ Global helpers
 @author: Benjamin Dezile
 '''
 
-import os.path
-
-DEFAULT_ENCODING = 'MacRoman'#'utf-8'
+DEFAULT_ENCODING = 'utf-8'
 
 def set_default_encoding(enc=DEFAULT_ENCODING):
     ''' Set the system default encoding '''
@@ -25,15 +23,15 @@ def set_default_encoding(enc=DEFAULT_ENCODING):
 
 def url_for_js(file_name):
     ''' Return the full url for a given javascript file '''
-    return url_for("js/" + file_name, True) 
+    return url_for("js/%s" % file_name, True) 
 
 def url_for_css(file_name):
     ''' Return the full url for a given stylesheet '''
-    return url_for("css/" + file_name, True)
+    return url_for("css/%s" % file_name, True)
 
 def url_for_img(path):
     ''' Return the full url for a given image '''
-    return url_for("img/" + path)
+    return url_for("img/%s" % path)
 
 def url_for_page(path, **params):
     ''' Return the full url for a given page '''
@@ -52,35 +50,6 @@ def url_for(path, cache_bust=False, **params):
     if cache_bust:
         url += ("?" if not params else "") + "v=" + Config.get_version()
     return url
-
-
-##  PATH HELPERS  ###############################
-
-def get_root_dir():
-    ''' Return the project's root directory '''
-    this_dir = os.path.dirname(os.path.realpath(__file__))
-    parts = this_dir.split("/")
-    return "/".join(parts[:-2])
-
-def get_python_dir():
-    ''' Return the full path to the python directory '''
-    return os.path.join(get_root_dir(), "python")
-
-def get_file_path(rel_path):
-    ''' Return the full path to a file '''
-    return os.path.join(get_root_dir(), rel_path)
-
-def get_web_dir():
-    ''' Return the path to the web directory '''
-    return os.path.join(get_root_dir(), "web")
-    
-def get_data_dir():
-    ''' Return the full path to the data directory '''
-    return os.path.join(get_web_dir(), "data")
-    
-def get_web_file_path(rel_path):
-    ''' Return the full path to a web file '''
-    return os.path.join(get_web_dir(), rel_path)
 
 
 ##  FORMATTING HELPERS  #########################

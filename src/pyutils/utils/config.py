@@ -5,7 +5,7 @@ Created on Feb 20, 2012
 @author: Benjamin Dezile
 '''
 
-from logging import Logger
+import traceback
 import yaml
 import os
 
@@ -19,7 +19,7 @@ class ConfigParser:
     def __init__(self):
         self.config = dict()
     
-    def parse(self, filepath, key = None):
+    def parse(self, filepath, key=None):
         ''' Parse the given file 
         filepath:     Absolute path to the file to parse
         key:          Key to store config under
@@ -33,9 +33,11 @@ class ConfigParser:
             root = self.config if not key else self.config[key]
             for k in m.keys():
                 root[k] = m[k]
-            Logger.info("Loaded configuration from %s" % filepath)
+            print "Loaded configuration from %s" % filepath
         finally:
-            if fp: fp.close()
+            if fp: 
+                fp.close()
+        return self
             
     def get(self):
         ''' Return the last configuration that was parsed '''
@@ -157,7 +159,7 @@ class Config:
         config_files:  Config files to be parsed (list or map of file -> namespace key)
         '''
         if not cls.config:
-            Logger.info("Loading application configuration")
+            print "Loading application configuration"
             root = config_dir if config_dir is not None else "."
             reader = ConfigParser()
             try:
@@ -185,6 +187,7 @@ class Config:
                 if app_config and app_config.has_key('env'):
                     cls.env = app_config['env']
                         
-                Logger.info("Loaded configuration")
+                print "Loaded configuration"
             except Exception, e:
-                Logger.error("Error while reading config file", e)
+                print "Error while reading config file: %s" % e
+                traceback.print_stack()
