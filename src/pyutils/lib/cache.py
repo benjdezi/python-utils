@@ -5,7 +5,6 @@ Created on Feb 24, 2012
 @author: Benjamin Dezile
 '''
 
-from pyutils.utils.config import Config
 from cStringIO import StringIO
 import redis
 import uuid
@@ -35,7 +34,7 @@ class Cache:
     REDIS_TYPE_SORTED_SET = "zset"
     KEY_DEFAULT_TTL = 3600
     DEFAULT_PORT = 6379
-    DEFAULT_HOST = Config.get("redis", "host")
+    DEFAULT_HOST = "localhost"
     
     instance = None
     
@@ -48,6 +47,18 @@ class Cache:
         #if self.db_index > 0:
         #    self.redis.select(self.db_index)
         self.instance = self
+    
+    @classmethod
+    def init(cls, host=None, port=None, index=None):
+        ''' Initialized the cache instance '''
+        params = dict()
+        if host:
+            params['host'] = host
+        if port:
+            params['port'] = port
+        if index:
+            params['index'] = index
+        Cache(**params)
     
     @classmethod
     def make_ns_key(cls, ns, controller_name, action_name, params=None):

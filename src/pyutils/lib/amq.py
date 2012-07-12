@@ -5,8 +5,8 @@ Created on Feb 21, 2012
 @author: Benjamin Dezile
 '''
 
-from pyutils.utils.logging import Logger
 from amqplib import client_0_8 as amqp
+import traceback
 import json
 import re
 
@@ -25,6 +25,8 @@ class AMQ:
     Can act either as a consumer or a publisher, depending 
     on whether a message handler is provided at initialization time.
     '''
+    
+    verbose = True
     
     def __init__(self, config, queue=None, message_handler=None):
         ''' Create a new wrapper instance
@@ -54,14 +56,24 @@ class AMQ:
                                 "password": self.pwd,
                                 "virtual_host": "/",
                                 "insist": False}
+    
+    @classmethod
+    def enable_verbose(cls, is_enabled=True):
+        ''' Enable or disable verbose mode '''
+        cls.verbose = is_enabled
         
+    def _verbose(self, msg):
+        ''' Print out a give message '''
+        if AMQ.verbose is True:
+            print msg
+    
     def connect(self):
         ''' Establish connection to the RabbitMQ server '''
         self.connection = amqp.Connection(self.host, self.user, self.pwd)
         self.channel = self.connection.channel()
         self.channel.exchange_declare(self.exchange, DEFAULT_EXCHANGE_TYPE, durable=True)
         self.on = True
-        Logger.info("Connected to RabbitMQ @ %s:%d as \"%s\"" % (self.host, self.port, self.user))
+        self._verbose("Connected to RabbitMQ @ %s:%d as \"%s\"" % (self.host, self.port, self.user))
 
     def publish(self, message, routing_key):
         ''' Publish a given message 
@@ -80,7 +92,7 @@ class AMQ:
             return
         if msg.body == self.shutdown_signal:
             # Shutdown
-            Logger.info("Received shutdown signal")
+            self._verbose("Received shutdown signal")
             self.channel.basic_ack(msg.delivery_tag)
             self.close(msg.consumer_tag)
         else:
@@ -92,7 +104,8 @@ class AMQ:
                 self.message_handler(msg.body, **params)
                 self.channel.basic_ack(msg.delivery_tag)
             except Exception, e:
-                Logger.error("Error while handling message", e)
+                self._verbose("Error while handling message: %s" % e)
+                traceback.print_stack()
     
     def monitor(self, routing_key=None):
         ''' Start monitor for incoming message from the previously specified queue.
@@ -109,12 +122,12 @@ class AMQ:
         if not self.queue_exists:
             self.channel.queue_declare(self.queue_name, durable=True, auto_delete=False)
             self.channel.queue_bind(self.queue_name, self.exchange, routing_key)
-            Logger.info("Declared queue %s" % self.queue_name)
+            self._verbose("Declared queue %s" % self.queue_name)
             
         self.routing_key = routing_key
         self.routing_key_pattern = re.compile(self.routing_key)
         self.channel.basic_consume(self.queue_name, callback=self._on_message_received)
-        Logger.info("Started consuming %s from %s" % (routing_key, self.queue_name))
+        self._verbose("Started consuming %s from %s" % (routing_key, self.queue_name))
         
         # Consumption loop
         while True:
@@ -122,7 +135,8 @@ class AMQ:
                 self.channel.wait()
             except Exception, e:
                 if self.on:
-                    Logger.error("Error while waiting for messages", e)
+                    self._verbose("Error while waiting for messages: %s" % e)
+                    traceback.print_stack()
                 else:
                     break
     
@@ -133,5 +147,5 @@ class AMQ:
             self.channel.basic_cancel(consumer_tag)
         self.channel.close()
         self.connection.close()
-        Logger.info("Closed connection to RabbitMQ @ %s" % self.host)
+        self._verbose("Closed connection to RabbitMQ @ %s" % self.host)
 
