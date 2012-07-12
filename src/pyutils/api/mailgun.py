@@ -61,6 +61,9 @@ class Mailer:
             fp.close()
             
             cls._verbose("Send email \"%s\" to %s: return = %s, response = %s" % (subject, to_address, ret_val, resp.replace("\n", "")))
+            
+            # Success
+            return True
         finally:
             if fp: 
                 fp.close()
