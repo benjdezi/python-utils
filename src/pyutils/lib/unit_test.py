@@ -45,7 +45,7 @@ class TestSuite:
     
     _reserved = ("setup", "teardown")
     
-    def __init__(self, **env_params):
+    def __init__(self):
         ''' Create a new instance '''
         self.result_map = dict()
         
@@ -61,7 +61,7 @@ class TestSuite:
         ''' Run finalization code after running test cases '''
         pass
     
-    def run(self):
+    def run(self, **setup_params):
         ''' Run the entire set of test cases in this suite '''
         
         print "Running test suite %s" % self.__class__.__name__
@@ -71,7 +71,7 @@ class TestSuite:
         
         try: 
             print "Running setup"
-            self.setup()
+            self.setup(**setup_params)
         except Exception, e:
             raise SetupException(e)
         

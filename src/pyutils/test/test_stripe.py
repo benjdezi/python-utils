@@ -10,11 +10,8 @@ from pyutils.api.stripe import StripeAPI, StripeCard
 class TestStripe(TestSuite):
     ''' Test Stripe API methods '''
     
-    def __init__(self, api_key):
-        TestSuite.__init__(self)
+    def setup(self, api_key):
         StripeAPI.init(api_key)
-    
-    def setup(self):
         self.card = StripeCard("Mr. Test", "4242424242424242", 12, 2012, 123)
         self.email = "stripe-test@domain.com"
         self.descr = "Test user"
@@ -55,6 +52,4 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise ValueError("Missing API key")
 
-    api_key = sys.argv[1]
-    suite = TestStripe(api_key)
-    suite.run()
+    TestStripe().run(api_key=sys.argv[1])
