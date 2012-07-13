@@ -166,7 +166,7 @@ class Config:
             try:
                 
                 # Load config files
-                if config_files:
+                if not config_files:
                     # No files, just get all from directory
                     for file_name in os.listdir(root):
                         if file_name.endswith(".yml"):
