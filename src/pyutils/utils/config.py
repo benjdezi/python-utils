@@ -73,7 +73,7 @@ class Config:
         return cls._eval(_val)
     
     @classmethod
-    def get(cls, section, key = None):
+    def get(cls, section, key=None):
         ''' Get a config value 
         section:    Subsection or root key
         key:        Key within the specified section
@@ -89,7 +89,7 @@ class Config:
             for k in val:
                 val[k] = cls._eval(val[k])
         else:
-            sec = cls.config.get(section, None)
+            sec = cls.config.get(section, key)
             if not sec:
                 raise ValueError("Section not found: %s" % section)
             val = sec.get(key, None)
@@ -192,3 +192,4 @@ class Config:
             except Exception, e:
                 print "Error while reading config file: %s" % e
                 traceback.print_stack()
+                exit()
