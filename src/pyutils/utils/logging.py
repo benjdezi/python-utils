@@ -16,7 +16,7 @@ class Logger:
 	LOG_LEVEL_DEBUG = 3
 	LOG_LEVEL_TRACE = 4
 	LOG_LEVEL_ALL = 5
-	LEVEL_NAMES = ["Error", "Warning", "Info", "Debug", "Trace"]
+	LEVEL_NAMES = ["ERROR", "WARNING", "INFO", "DEBUG", "TRACE"]
 	
 	options = { 'level': 5 }
 

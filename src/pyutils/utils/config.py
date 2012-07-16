@@ -168,9 +168,11 @@ class Config:
                 # Load config files
                 if not config_files:
                     # No files, just get all from directory
+                    config_files = list()
                     for file_name in os.listdir(root):
                         if file_name.endswith(".yml"):
                             reader.parse(os.path.join(root, file_name))
+                            config_files.append(file_name)
                 elif type(config_files) is list:
                     # List of files
                     for file_name in config_files:
@@ -179,16 +181,21 @@ class Config:
                     # Files mapped to namespace keys
                     for file_name in config_files.keys():
                         reader.parse(os.path.join(root, file_name), config_files[file_name])
+                    config_files = config_files.values()
                         
                 # Get parsed config map
                 cls.config = reader.get()        
                 
-                # Get environment
+                # Get environment name
                 app_config = cls.config.get('application')
                 if app_config and app_config.has_key('env'):
                     cls.env = app_config['env']
+                else:
+                    for file_name in config_files:
+                        if file_name.startswith("env."):
+                            cls.env = file_name.split(".")[1]
                         
-                print "Loaded configuration"
+                print "Loaded configuration [%s]" % cls.env
             except Exception, e:
                 print "Error while reading config file: %s" % e
                 traceback.print_stack()
