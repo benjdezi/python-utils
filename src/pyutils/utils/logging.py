@@ -54,7 +54,7 @@ class Logger:
 			msg = "%s (%s)" % (msg, err) 
 		cls._log(cls.LOG_LEVEL_ERROR, msg)
 		if err:
-			traceback.print_stack()
+			traceback.print_exc()
 
 	@classmethod
 	def warn(cls, msg):
