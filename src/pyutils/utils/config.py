@@ -28,12 +28,13 @@ class ConfigParser:
         try:
             fp = open(filepath, 'r')
             m = yaml.load(fp.read())
-            if key and not self.config.has_key(key): 
-                self.config[key] = dict()
-            root = self.config if not key else self.config[key]
-            for k in m.keys():
-                root[k] = m[k]
-            print "Loaded configuration from %s" % filepath
+            if m is not None:
+                if key and not self.config.has_key(key): 
+                    self.config[key] = dict()
+                root = self.config if not key else self.config[key]
+                for k in m.keys():
+                    root[k] = m[k]
+                print "Loaded configuration from %s" % filepath
         finally:
             if fp: 
                 fp.close()
@@ -152,6 +153,12 @@ class Config:
         except ValueError:
             pass
         return "//%s%s" % (app_domain, (":%s" % app_port if app_port else ""))
+
+    @classmethod
+    def init_with_dict(cls, d):
+        ''' Initialize with config values '''
+        cls.config = d
+        cls.env = cls.config.get('env', ENV_DEV)
 
     @classmethod
     def init(cls, config_dir=None, config_files=None):
