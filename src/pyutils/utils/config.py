@@ -139,7 +139,9 @@ class Config:
     def get_domain(cls):
         ''' Get the root domain name '''
         try:
-            return cls.get("application", "domain")
+            d = cls.get("application", "domain")
+            if d:
+                return d.lower()
         except ValueError:
             pass
         
@@ -152,7 +154,7 @@ class Config:
             app_port = cls.get("server", "port")
         except ValueError:
             pass
-        return "//%s%s" % (app_domain, (":%s" % app_port if app_port else ""))
+        return "//%s%s" % (app_domain, (":%s" % app_port if (app_port and app_port is not 80) else ""))
 
     @classmethod
     def init_with_dict(cls, d):
